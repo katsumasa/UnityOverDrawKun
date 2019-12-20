@@ -50,6 +50,11 @@ namespace Utj.OverdrawKun {
 
         void Start()
         {
+            if(MasterCamera == null)
+            {
+                MasterCamera = Camera.main;
+            }
+
             if (ThisCamera != null)
             {
                 ThisCamera.clearFlags = CameraClearFlags.SolidColor;
