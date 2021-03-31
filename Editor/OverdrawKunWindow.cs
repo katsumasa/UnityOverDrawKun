@@ -10,6 +10,9 @@ namespace Utj
 {
     namespace OverdrawKun
     {
+        /// <summary>
+        /// 測定したOverdrawのデータを解析する
+        /// </summary>
         public class OverdrawKunWindow : EditorWindow
         {
             [System.Serializable]
@@ -83,9 +86,7 @@ namespace Utj
                 }
                 EditorGUILayout.EndHorizontal();
 
-
-
-                if (m_fpaths != null && m_fpaths.Count > 0)
+                if (m_avgs != null && m_avgs.Count > 0)
                 {                    
                     var ofst = 0;
                     var count = 0;
@@ -99,17 +100,17 @@ namespace Utj
                     }
                     // グラフの描画
                     GraphFieldFloat(new GUIContent(m_folderName), m_prots, m_avgs.Average(),m_avgs.Max());
-
-                    EditorGUILayout.LabelField(string.Format("Current:{0}", m_avgs[mSlider]));
-
+                                        
                     // 画像の表示
-                    var r1 = EditorGUILayout.GetControlRect();
-                    var r2 = new Rect(r1.x, r1.y, r1.width, position.height - (r1.y + r1.height) - 30.0f);
+                    var texture = m_textures[mSlider];                    
+                    var r1 = EditorGUILayout.GetControlRect(true,0);                    
+                    var h = position.height - (r1.y + r1.height) - 30.0f;
+                    var r2 = new Rect(r1.x, r1.y, r1.width, h);                   
                     EditorGUI.DrawPreviewTexture(r2, m_textures[mSlider], null, ScaleMode.ScaleToFit);
-                    
-                    r1 = new Rect(r2.x, r2.y + r2.height, r2.width,20);
+
+
                     // スライダーの描画
-                    //mSlider = EditorGUILayout.IntSlider(mSlider, 0, m_fpaths.Count - 1);
+                    r1 = new Rect(r2.x, r2.y + r2.height, r2.width,20);                    
                     mSlider = EditorGUI.IntSlider(r1,mSlider, 0, m_fpaths.Count - 1);
                 }                
             }
@@ -124,20 +125,24 @@ namespace Utj
                 textures = new List<Texture2D>();
                 for(var i = 0; i < files.Count; i++)
                 {
-                    var bytes = System.IO.File.ReadAllBytes(files[i]);
-                    var texture = new Texture2D(2, 2);
-                    texture.LoadImage(bytes);
-                    var colors = texture.GetPixels();
                     float total = 0.0f;
-                    for(var y = 0; y < texture.height; y++)
+                    float avg = 0;
+                    var texture = new Texture2D(2, 2);
+                    var bytes = System.IO.File.ReadAllBytes(files[i]);                    
+                    texture.LoadImage(bytes);
+                    if (texture != null)
                     {
-                        for(var x = 0; x < texture.width; x++)
+                        var colors = texture.GetPixels();
+                        for (var y = 0; y < texture.height; y++)
                         {
-                            var c = colors[y * texture.width + x];
-                            total += c.r;
+                            for (var x = 0; x < texture.width; x++)
+                            {
+                                var c = colors[y * texture.width + x];
+                                total += c.r;
+                            }
                         }
+                        avg = total / (texture.height * texture.width);
                     }
-                    var avg = total / (texture.height * texture.width);
                     avgs.Add(avg);
                     totals.Add(total);
                     textures.Add(texture);
@@ -166,8 +171,8 @@ namespace Utj
                     for (var i = 0; i < list.Count; i++)
                     {
                         var w = 4f;
-                        var h = list[list.Count - (i + 1)] * scale;                        
-                        var x = area.x + EditorGUIUtility.currentViewWidth - (i + 1) * w;                        
+                        var h = list[list.Count - (i + 1)] * scale;
+                        var x = area.x + EditorGUIUtility.currentViewWidth - (i + 1) * w - (w / 2.0f); // 太さの半分をオフセットする
                         var y = area.y + area.height;
                         var rect = new Rect(x, y, w, -h);
 
@@ -215,6 +220,17 @@ namespace Utj
                             );
                         var label = new GUIContent(Format("Avg:{0}", avg));
                         var contentSize = EditorStyles.label.CalcSize(label);
+                        EditorGUI.DrawRect(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), Color.black);
+                        EditorGUI.LabelField(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), label);
+                    }
+
+                    // 現在値の表示
+                    {                        
+                        var label = new GUIContent(Format("Val:{0}", list[list.Count-1]));
+                        var contentSize = EditorStyles.label.CalcSize(label);
+                        var x = area.x;
+                        var y = area.y + area.height - contentSize.y;
+                        var w = area.width;
                         EditorGUI.DrawRect(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), Color.black);
                         EditorGUI.LabelField(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), label);
                     }
