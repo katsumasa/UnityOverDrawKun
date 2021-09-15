@@ -1,6 +1,7 @@
-# UnityOverDrawKun
+# UnityOverDrawKun 
 
 overdraw check tool.
+[English version README](REAMME_EN.md)
 
 ## 概要
 
