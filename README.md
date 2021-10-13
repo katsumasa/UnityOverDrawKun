@@ -1,29 +1,45 @@
-# UnityOverDrawKun 
+# UnityOverDrawKun
 
 overdraw check tool.
 [English version README](REAMME_EN.md)
 
 ## 概要
 
-描画時のオーバードロー（重ね塗り）を計測するツールです。
-マルチディスプレイに対応しているプラットフォームでのみ計測可能です。</br>
+描画時のオーバードロー（重ね塗り）を計測するツールです。</br>
+***マルチディスプレイに対応しているプラットフォームでのみ計測可能です。***
+</br></br>
+
 ![img](Doc/641b60a898bf20e97083f5adb1294113.gif)
 
 ## インストール
 
 `UnityOverDrawKun` 以下を計測する対象プロジェクトのAssetフォルダー以下へ配置して下さい。</br>
+
 ![img](Doc/943aa0cf3a2442674d4d3e0e9cac8132.png)
 
 ## セッティング
 
 - 上記フォルダに含まれる`OverdrawCamera`を計測するSceneへ配置して下さい。</br>
+
 ![img](Doc/d5cf54a0dd8ba2f731fd92e732c46dc6.png)
+
 - `OverdrawCamera.MasterCamera`に計測するCameraを指定して下さい。</br>
+  
 ![img](Doc/fac434078910df9e378ae8cf2de692f2.png)
+
 - GameViewを２個以上表示して下さい。Gameビューはビュー上の三からAdd Tabを選択しGameを選択することで増やすことが出来ます。</br>
+- 
 ![img](Doc/5fc934de91445b0ae77326436e154d7a.png)
+
 - `OverdrawCamera`にアタッチされたいるCameraコンポーネントのTarget Display プロパティをDisplay1以外に設定して下さい。</br>
+  
  ![img](Doc/0241bb02078058a3a206b29ba29f6cb4.png)
+
+MEMO
+
+```:txt
+ 現在選択しているプラットフォームでマルチディスプレイが対応していない場合、Target Displayの項目は選択されません。プラットフォームをPC,Mac&Linux Standaloneなどへ変更して下さい。
+```
 
 ## 計測方法
 
