@@ -297,7 +297,7 @@ namespace Utj
                         var label = new GUIContent(Format("{0,3:F6}", value));
                         var contentSize = UnityEditor.EditorStyles.label.CalcSize(label);                        
                         var x = rect.x + rect.width - len + select * 1.0f - contentSize.x / 2;
-                        var y = rect.y + rect.height - value * scale - contentSize.y;
+                        var y = rect.y + rect.height - list[select] * scale - contentSize.y;
                         var w = contentSize.x;
                         var h = contentSize.y;
 
