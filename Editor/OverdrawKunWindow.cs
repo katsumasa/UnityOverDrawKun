@@ -19,7 +19,11 @@ namespace Utj
             public class Style
             {
                 public static readonly GUIContent TitleContent = new GUIContent("UnityOverdrawKun");
+#if UNITY_2020_1_OR_NEWER
+                public static readonly GUIContent OpenFolderContens = new GUIContent((Texture2D)EditorGUIUtility.Load("d_Folder Icon"),"Open Folder");
+#else
                 public static readonly GUIContent OpenFolderContens = new GUIContent((Texture2D)EditorGUIUtility.Load("d_OpenedFolder Icon"),"Open Folder");
+#endif           
                 public static readonly GUIContent SaveAsContens = new GUIContent((Texture2D)EditorGUIUtility.Load("d_SaveAs@2x"), "Save As CSV");                
             }
 
