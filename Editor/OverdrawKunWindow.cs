@@ -35,7 +35,7 @@ namespace Utj
 
 
 
-            [MenuItem("Window/UnityOverdrawKun")]
+            [MenuItem("Window/UTJ/UnityOverdrawKun")]
             public static void Create()
             {
                 var window = (OverdrawKunWindow)EditorWindow.GetWindow(typeof(OverdrawKunWindow));
