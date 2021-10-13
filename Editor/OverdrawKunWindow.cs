@@ -32,7 +32,7 @@ namespace Utj
             string m_folderName;
             string m_path="";
             int mSlider;
-            int mSelect;
+
 
 
             [MenuItem("Window/UTJ/UnityOverdrawKun")]
@@ -63,7 +63,6 @@ namespace Utj
 
             private void OnGUI()
             {
-
                 // TOOL BAR
                 EditorGUILayout.BeginHorizontal();                
 
@@ -98,10 +97,12 @@ namespace Utj
                         }
                     }
                 }
+
+                EditorGUILayout.LabelField(m_folderName);
+
                 EditorGUILayout.EndHorizontal();
 
-                
-
+                // 本体の描画
                 if (m_avgs != null && m_avgs.Count > 0)
                 {
                     var ofst = 0;
@@ -118,18 +119,11 @@ namespace Utj
                     // グラフの描画
                     var rect = Graph(m_prots,m_avgs.Max());
 
-
-                    if (rect.Contains(Event.current.mousePosition))
-                    {
-                        mSelect = (int)(Event.current.mousePosition.x - rect.x);
-                    }
-
-
                     // 画像の表示
                     var texture = m_textures[mSlider];
                     var r1 = EditorGUILayout.GetControlRect(true, 0);
                     var h = position.height - (r1.y + r1.height) - 30.0f;
-                    var r2 = new Rect(r1.x, r1.y, r1.width, h);
+                    var r2 = new Rect(r1.x+16, r1.y, r1.width-32, h);
                     EditorGUI.DrawPreviewTexture(r2, m_textures[mSlider], null, ScaleMode.ScaleToFit);
 
                     // スライダーの描画
@@ -141,13 +135,15 @@ namespace Utj
                     // 何も表示されていないと味気ないので
                     Graph(m_prots,0);
 
+                    // 偽画像風背景
                     var r1 = EditorGUILayout.GetControlRect(true, 0);
-                    var h = position.height - (r1.y + r1.height) - 30.0f;
-                    var r2 = new Rect(r1.x, r1.y, r1.width, h);
-
+                    var h = position.height - (r1.y + r1.height) - 30.0f;                    
+                    var r2 = new Rect(r1.x+16, r1.y, r1.width-32, h);
                     EditorGUI.DrawRect(r2, new Color32(13, 99, 137,255));
+                    
+                    // スライダー
                     r1 = new Rect(r2.x, r2.y + r2.height, r2.width, 20);
-                     EditorGUI.IntSlider(r1, 0, 0, 0);
+                    EditorGUI.IntSlider(r1, 0, 0, 0);
                 }                                    
             }
 
