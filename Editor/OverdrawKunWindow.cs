@@ -325,7 +325,7 @@ namespace Utj
             static void DrawAdditionalLine(Rect rect, float value, Color color)
             {
                 UnityEditor.EditorGUI.DrawRect(rect, color);
-                var label = new GUIContent(Format("{0,3:F5}", value));
+                var label = new GUIContent(Format("{0,3:F6}", value));
                 var contentSize = UnityEditor.EditorStyles.label.CalcSize(label);
                 var rect2 = new Rect(rect.x, rect.y - contentSize.y / 2, contentSize.x, contentSize.y);
                 UnityEditor.EditorGUI.DrawRect(rect2, Color.black);
