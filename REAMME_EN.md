@@ -1,5 +1,8 @@
 # UnityOverDrawKun
 
+![GitHub package.json version](https://img.shields.io/github/package-json/v/katsumasa/UnityOverDrawKun?style=plastic)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/katsumasa/UnityOverDrawKun?style=plastic)
+
 overdraw check tool.
 
 ## Summary
