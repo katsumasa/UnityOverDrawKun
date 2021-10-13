@@ -32,7 +32,7 @@ namespace Utj
             string m_folderName;
             string m_path="";
             int mSlider;
-
+            int mSelect;
 
 
             [MenuItem("Window/UTJ/UnityOverdrawKun")]
@@ -40,6 +40,7 @@ namespace Utj
             {
                 var window = (OverdrawKunWindow)EditorWindow.GetWindow(typeof(OverdrawKunWindow));
                 window.titleContent = Style.TitleContent;
+                window.wantsMouseMove = true;
                 window.Show();
             }
 
@@ -49,13 +50,26 @@ namespace Utj
             }
 
 
+            void OnInspectorUpdate()
+            {
+                if (EditorWindow.mouseOverWindow)
+                {
+                    EditorWindow.mouseOverWindow.Focus();
+                }
+
+                this.Repaint();
+            }
+
+
             private void OnGUI()
             {
-                EditorGUILayout.BeginHorizontal();
-                var contentSize = EditorStyles.miniButtonMid.CalcSize(Style.OpenFolderContens);
-                if (GUILayout.Button(Style.OpenFolderContens,EditorStyles.miniButtonLeft,GUILayout.MaxWidth(contentSize.x+10)))
+
+                // TOOL BAR
+                EditorGUILayout.BeginHorizontal();                
+
+                // Load
+                if (GUILayout.Button(Style.OpenFolderContens, EditorStyles.miniButtonLeft, GUILayout.Width(32),GUILayout.Height(32)))
                 {
-                    // データの取り込み
                     m_path = EditorUtility.OpenFolderPanel("Load png Texture of Directory", m_path, "");
                     if (!string.IsNullOrEmpty(m_path))
                     {
@@ -65,8 +79,8 @@ namespace Utj
                     }
                 }
 
-                contentSize = EditorStyles.miniButtonMid.CalcSize(Style.SaveAsContens);
-                if(GUILayout.Button(Style.SaveAsContens, EditorStyles.miniButtonRight, GUILayout.MaxWidth(contentSize.x + 10)))
+                // Save
+                if (GUILayout.Button(Style.SaveAsContens, EditorStyles.miniButtonRight, GUILayout.Width(32),GUILayout.Height(32)))
                 {
                     if(m_fpaths != null)
                     {
@@ -86,33 +100,55 @@ namespace Utj
                 }
                 EditorGUILayout.EndHorizontal();
 
+                
+
                 if (m_avgs != null && m_avgs.Count > 0)
-                {                    
+                {
                     var ofst = 0;
                     var count = 0;
                     int w = (int)EditorGUIUtility.currentViewWidth;
                     ofst = 0;
-                    count = mSlider + 1;                                        
+                    count = mSlider + 1;
                     m_prots.Clear();
-                    for(var i = 0; i < count; i++)
+                    for (var i = 0; i < count; i++)
                     {
-                        m_prots.Add(m_avgs[i+ofst]);
-                    }
+                        m_prots.Add(m_avgs[i + ofst]);
+                    }                    
+
                     // グラフの描画
-                    GraphFieldFloat(new GUIContent(m_folderName), m_prots, m_avgs.Average(),m_avgs.Max());
-                                        
+                    var rect = Graph(m_prots,m_avgs.Max());
+
+
+                    if (rect.Contains(Event.current.mousePosition))
+                    {
+                        mSelect = (int)(Event.current.mousePosition.x - rect.x);
+                    }
+
+
                     // 画像の表示
-                    var texture = m_textures[mSlider];                    
-                    var r1 = EditorGUILayout.GetControlRect(true,0);                    
+                    var texture = m_textures[mSlider];
+                    var r1 = EditorGUILayout.GetControlRect(true, 0);
                     var h = position.height - (r1.y + r1.height) - 30.0f;
-                    var r2 = new Rect(r1.x, r1.y, r1.width, h);                   
+                    var r2 = new Rect(r1.x, r1.y, r1.width, h);
                     EditorGUI.DrawPreviewTexture(r2, m_textures[mSlider], null, ScaleMode.ScaleToFit);
 
-
                     // スライダーの描画
-                    r1 = new Rect(r2.x, r2.y + r2.height, r2.width,20);                    
-                    mSlider = EditorGUI.IntSlider(r1,mSlider, 0, m_fpaths.Count - 1);
-                }                
+                    r1 = new Rect(r2.x, r2.y + r2.height, r2.width, 20);
+                    mSlider = EditorGUI.IntSlider(r1, mSlider, 0, m_fpaths.Count - 1);
+                } 
+                else
+                {
+                    // 何も表示されていないと味気ないので
+                    Graph(m_prots,0);
+
+                    var r1 = EditorGUILayout.GetControlRect(true, 0);
+                    var h = position.height - (r1.y + r1.height) - 30.0f;
+                    var r2 = new Rect(r1.x, r1.y, r1.width, h);
+
+                    EditorGUI.DrawRect(r2, new Color32(13, 99, 137,255));
+                    r1 = new Rect(r2.x, r2.y + r2.height, r2.width, 20);
+                     EditorGUI.IntSlider(r1, 0, 0, 0);
+                }                                    
             }
 
 
@@ -150,103 +186,158 @@ namespace Utj
             }
 
 
-            static public void GraphFieldFloat(GUIContent content, List<float> list, float avg,float max)
+
+            static public Rect Graph(List<float> srcs,float max)
             {
+                var rect = GUILayoutUtility.GetRect(Mathf.Min(EditorGUIUtility.currentViewWidth, 300f), 200.0f);
+                rect = new Rect(rect.x + 16, rect.y, rect.width - 32, rect.height);
+                EditorGUI.DrawRect(rect, UnityEngine.Color.gray);
 
-                if (content != null)
+
+                int len = (int)rect.width;
+                var index = srcs.Count - len;
+                index = Mathf.Max(0, index);
+                len = Mathf.Min(len, srcs.Count - index);
+
+                var select = -1;
+
+                // indexの位置からグラフに表示される範囲でリストを作成する
+                var list = new List<float>();
+                for (var i = 0; i < len; i++)
                 {
-                    EditorGUILayout.LabelField(content);
+                    list.Add(srcs[i + index]);
                 }
-                var area = GUILayoutUtility.GetRect(Mathf.Min(EditorGUIUtility.currentViewWidth, 300f), 200.0f);
-                EditorGUI.DrawRect(area, UnityEngine.Color.gray);
 
+
+                // 背景
+                UnityEditor.EditorGUI.DrawRect(rect, UnityEngine.Color.gray);
 
 
                 if (list.Count != 0)
                 {
+                    var minValue = list.Min();
                     var maxValue = list.Max();
                     var avgValue = list.Average();
-                    var scale = area.height / max * 0.90f; // 最大値の高さが描画範囲の80%位に
 
+                    /// 底上げされる可能性がある為、最小値・最大値・平均値を退避
+                    var realMin = minValue;
+                    var realMax = maxValue;
+                    var realAvg = avgValue;
+
+                    // 最小値が0より小さい場合、グラフ的には最小値が0となるように底上げする
+                    if (realMin < 0f)
+                    {
+                        for (var i = 0; i < len; i++)
+                        {
+                            list[i] += Mathf.Abs(realMin);
+                        }
+                        minValue = list.Min();
+                        maxValue = list.Max();
+                        avgValue = list.Average();
+                    }
+
+                    // 最大値の高さが描画範囲の90%位に                                
+                    var scale = rect.height / maxValue * 0.90f;
+
+                    // グラフを描画
                     for (var i = 0; i < list.Count; i++)
                     {
-                        var w = 4f;
-                        var h = list[list.Count - (i + 1)] * scale;
-                        var x = area.x + EditorGUIUtility.currentViewWidth - (i + 1) * w - (w / 2.0f); // 太さの半分をオフセットする
-                        var y = area.y + area.height;
-                        var rect = new Rect(x, y, w, -h);
+                        var w = 1.0f;
+                        var h = list[i] * scale;
+                        var x = rect.x + rect.width - len + i * w;
+                        var y = rect.y + rect.height - h;
 
+                        var r = new Rect(x, y, w, h);
 
-                        if(float.Equals(max, list[list.Count - (i + 1)]))
+                        if (r.Contains(Event.current.mousePosition))
                         {
-                            EditorGUI.DrawRect(rect, Color.red);
+                            select = i;
+                            UnityEditor.EditorGUI.DrawRect(r, Color.white);
+                        } else if(list[i] == max)
+                        {
+                            UnityEditor.EditorGUI.DrawRect(r, Color.red);
                         }
-                        else if (i % 2 == 0)
+                        else
                         {
-                            EditorGUI.DrawRect(rect, new Color32(87, 166, 74, 255));
-                        } else
-                        {
-                            EditorGUI.DrawRect(rect, new Color32(17, 61, 111, 255));
+                            UnityEditor.EditorGUI.DrawRect(r, Color.green);
                         }
                     }
 
                     // 最大値の補助線
                     {
-                        var x = area.x;
-                        var y = area.y + area.height - max * scale;
-                        var w = area.width;
+                        var x = rect.x;
+                        var y = rect.y + rect.height - maxValue * scale;
+                        var w = rect.width;
                         var h = 1.0f;
-                        EditorGUI.DrawRect(
-                            new Rect(x, y, w, h),
-                            Color.white
-
-                            );
-                        var label = new GUIContent(Format("Max:{0}", max));
-                        var contentSize = EditorStyles.label.CalcSize(label);
-                        EditorGUI.DrawRect(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), Color.black);
-                        EditorGUI.LabelField(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), label);
+                        DrawAdditionalLine(new Rect(x, y, w, h), realMax, Color.white);
                     }
 
                     // 平均値の補助線
                     {
-                        var x = area.x;
-                        var y = area.y + area.height - avg * scale;
-                        var w = area.width;
+                        var x = rect.x;
+                        var y = rect.y + rect.height - avgValue * scale;
+                        var w = rect.width;
                         var h = 1.0f;
-                        EditorGUI.DrawRect(
-                            new Rect(x, y, w, h),
-                            Color.white
-
-                            );
-                        var label = new GUIContent(Format("Avg:{0}", avg));
-                        var contentSize = EditorStyles.label.CalcSize(label);
-                        EditorGUI.DrawRect(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), Color.black);
-                        EditorGUI.LabelField(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), label);
+                        DrawAdditionalLine(new Rect(x, y, w, h), realAvg, Color.white);
                     }
 
-                    // 現在値の表示
-                    {                        
-                        var label = new GUIContent(Format("Val:{0}", list[list.Count-1]));
-                        var contentSize = EditorStyles.label.CalcSize(label);
-                        var x = area.x;
-                        var y = area.y + area.height - contentSize.y;
-                        var w = area.width;
-                        EditorGUI.DrawRect(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), Color.black);
-                        EditorGUI.LabelField(new Rect(x, y - contentSize.y / 2, contentSize.x, contentSize.y), label);
+                    // 最小値の補助線
+                    {
+                        var x = rect.x;
+                        var y = rect.y + rect.height - minValue * scale;
+                        var w = rect.width;
+                        var h = 1.0f;
+                        DrawAdditionalLine(new Rect(x, y, w, h), realMin, Color.white);
+                    }
+
+                    // 選択された値を表示する
+                    if (select >= 0 && select < list.Count)
+                    {
+                        var value = list[select];
+                        if(realMin < 0f)
+                        {
+                            value -= Mathf.Abs(realMin);
+                        }
+                        var label = new GUIContent(Format("{0,3:F6}", value));
+                        var contentSize = UnityEditor.EditorStyles.label.CalcSize(label);                        
+                        var x = rect.x + rect.width - len + select * 1.0f - contentSize.x / 2;
+                        var y = rect.y + rect.height - value * scale - contentSize.y;
+                        var w = contentSize.x;
+                        var h = contentSize.y;
+
+                        var r = new Rect(x, y, w, h);
+                        UnityEditor.EditorGUI.DrawRect(r, new Color32(0, 0, 0, 128));
+                        UnityEditor.EditorGUI.LabelField(r, label);
                     }
                 }
 
 
+                return rect;
             }
+
+
+            /// <summary>
+            /// 補助線を引く
+            /// </summary>
+            /// <param name="rect"></param>
+            /// <param name="value"></param>
+            /// <param name="color"></param>
+            static void DrawAdditionalLine(Rect rect, float value, Color color)
+            {
+                UnityEditor.EditorGUI.DrawRect(rect, color);
+                var label = new GUIContent(Format("{0,3:F5}", value));
+                var contentSize = UnityEditor.EditorStyles.label.CalcSize(label);
+                var rect2 = new Rect(rect.x, rect.y - contentSize.y / 2, contentSize.x, contentSize.y);
+                UnityEditor.EditorGUI.DrawRect(rect2, Color.black);
+                UnityEditor.EditorGUI.LabelField(rect2, label);
+            }
+
 
             public static string Format(string fmt, params object[] args)
             {
                 return String.Format(System.Globalization.CultureInfo.InvariantCulture.NumberFormat, fmt, args);
 
-            }
-
-
-            
+            }            
 
         }
 
