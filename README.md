@@ -4,7 +4,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/katsumasa/UnityOverDrawKun?style=plastic)
 
 overdraw check tool.
-[English version README](REAMME_EN.md)
+[English version README](Documentation~/UnityOverDrawKun.md)
 
 ## 概要
 
