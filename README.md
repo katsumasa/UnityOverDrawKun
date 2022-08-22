@@ -86,6 +86,10 @@ Window左上のOpenFolderアイコンから計測結果の保存先のディレ�
 
 画面下部のスライドバーをスライドさせることで、各フレームで発生しているオーバードローの度合を確認する事が可能です。
 
+*Note*  
+オーバードローの度合とは[OverdrawKun.shader](https://github.com/katsumasa/UnityOverDrawKun/blob/master/Runtime/Shaders/OverdrawKun.shader)でレンダリングされたTextureの各ピクセルのR成分の平均値を指しています。
+
+
 ### CSV形式での保存方法
 
 画面上部のSave As CSVボタンから解析結果をCSV形式で保存する事が出来ます。
