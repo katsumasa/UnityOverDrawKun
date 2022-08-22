@@ -19,7 +19,11 @@ namespace Utj
             public class Style
             {
                 public static readonly GUIContent TitleContent = new GUIContent("UnityOverdrawKun");
+#if UNITY_2020_1_OR_NEWER
+                public static readonly GUIContent OpenFolderContens = new GUIContent((Texture2D)EditorGUIUtility.Load("d_Folder Icon"),"Open Folder");
+#else
                 public static readonly GUIContent OpenFolderContens = new GUIContent((Texture2D)EditorGUIUtility.Load("d_OpenedFolder Icon"),"Open Folder");
+#endif           
                 public static readonly GUIContent SaveAsContens = new GUIContent((Texture2D)EditorGUIUtility.Load("d_SaveAs@2x"), "Save As CSV");                
             }
 
@@ -297,7 +301,7 @@ namespace Utj
                         var label = new GUIContent(Format("{0,3:F6}", value));
                         var contentSize = UnityEditor.EditorStyles.label.CalcSize(label);                        
                         var x = rect.x + rect.width - len + select * 1.0f - contentSize.x / 2;
-                        var y = rect.y + rect.height - value * scale - contentSize.y;
+                        var y = rect.y + rect.height - list[select] * scale - contentSize.y;
                         var w = contentSize.x;
                         var h = contentSize.y;
 

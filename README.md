@@ -1,7 +1,10 @@
 # UnityOverDrawKun
 
+![GitHub package.json version](https://img.shields.io/github/package-json/v/katsumasa/UnityOverDrawKun?style=plastic)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/katsumasa/UnityOverDrawKun?style=plastic)
+
 overdraw check tool.
-[English version README](REAMME_EN.md)
+[English version README](Documentation~/UnityOverDrawKun.md)
 
 ## 概要
 
@@ -10,33 +13,27 @@ overdraw check tool.
 </br></br>
 ![641b60a898bf20e97083f5adb1294113](https://user-images.githubusercontent.com/29646672/137099718-fa1850a7-1fe7-40b9-a1df-1a6d29cd1b4b.gif)
 
-
-
 ## インストール
 
 `UnityOverDrawKun` 以下を計測する対象プロジェクトのAssetフォルダー以下へ配置して下さい。</br>
 
 ![image](https://user-images.githubusercontent.com/29646672/137099528-e92781a8-657c-4c91-b527-7924f24f08e2.png)
 
-
-
 ## セッティング
 
 - 上記フォルダに含まれる`OverdrawCamera`を計測するSceneへ配置して下さい。</br>
 
-
 ![d5cf54a0dd8ba2f731fd92e732c46dc6](https://user-images.githubusercontent.com/29646672/137100995-bcd30b40-8cb9-43eb-811d-fc4b212273bc.png)
 
 - `OverdrawCamera.MasterCamera`に計測するCameraを指定して下さい。</br>
-
-![fac434078910df9e378ae8cf2de692f2](https://user-images.githubusercontent.com/29646672/137101051-5e1cc1f1-0076-4200-9adc-8388b672e335.png)
-
+　![fac434078910df9e378ae8cf2de692f2](https://user-images.githubusercontent.com/29646672/137101051-5e1cc1f1-0076-4200-9adc-8388b672e335.png)
 
 - `OverdrawCamera`にアタッチされたいるCameraコンポーネントのTarget Display プロパティの値に`Display 2`を設定して下さい。</br>
   
 ![0241bb02078058a3a206b29ba29f6cb4](https://user-images.githubusercontent.com/29646672/137101158-a6191d63-2590-4005-8046-c75f25ed2776.png)
 
-*MEMO*
+### MEMO
+
 ```:txt
  現在選択しているプラットフォームでマルチディスプレイが対応していない場合、Target Displayの項目は選択されません。プラットフォームをPC,Mac&Linux Standaloneなどへ変更して下さい。
 ```
@@ -66,13 +63,11 @@ overdraw check tool.
 ![4b6bdd8b65e4b1ed0b71d05a4f9e9511](https://user-images.githubusercontent.com/29646672/137101240-0ad277ff-00c6-4900-b04f-bd9d56873d0b.png)
 
 
-
 ## 計測結果の解析
 
 UnityOverdrawKunWindowで計測結果を解析することが可能です。
 
 ![0e28ce0ecf377d4d977aab0c4dbe3e05](https://user-images.githubusercontent.com/29646672/137102502-f118399b-fc8e-46f4-bccb-cccd89860ab3.gif)
-
 
 ### Windowの起動方法
 
