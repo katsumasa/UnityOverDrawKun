@@ -1,6 +1,6 @@
 {
   "name": "com.utj.unityoverdrawkun",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "UnityOverDrawKun",
   "description": "overdraw check tool",
   "unity": "2018.1",
