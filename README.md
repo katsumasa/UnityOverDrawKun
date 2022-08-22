@@ -31,21 +31,25 @@ overdraw check tool.
 
 ![fac434078910df9e378ae8cf2de692f2](https://user-images.githubusercontent.com/29646672/137101051-5e1cc1f1-0076-4200-9adc-8388b672e335.png)
 
-- GameViewを２個以上表示して下さい。Gameビューはビュー上の三からAdd Tabを選択しGameを選択することで増やすことが出来ます。</br>
- 
-![5fc934de91445b0ae77326436e154d7a](https://user-images.githubusercontent.com/29646672/137101120-b6d2d0ef-908c-4031-8e5a-29e86dc711e2.png)
 
-
-- `OverdrawCamera`にアタッチされたいるCameraコンポーネントのTarget Display プロパティをDisplay1以外に設定して下さい。</br>
+- `OverdrawCamera`にアタッチされたいるCameraコンポーネントのTarget Display プロパティの値に`Display 2`を設定して下さい。</br>
   
 ![0241bb02078058a3a206b29ba29f6cb4](https://user-images.githubusercontent.com/29646672/137101158-a6191d63-2590-4005-8046-c75f25ed2776.png)
 
-
-MEMO
-
+*MEMO*
 ```:txt
  現在選択しているプラットフォームでマルチディスプレイが対応していない場合、Target Displayの項目は選択されません。プラットフォームをPC,Mac&Linux Standaloneなどへ変更して下さい。
 ```
+
+- ２個目のGameViewを表示して下さい。GameViewはView上の三からAdd Tabを選択しGameを選択することで増やすことが出来ます。</br>
+ 
+<img width="400" alt="image" src="https://user-images.githubusercontent.com/29646672/137101120-b6d2d0ef-908c-4031-8e5a-29e86dc711e2.png">
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/29646672/185821260-86ddfe77-df7c-4f05-9dca-c0e456bdfe5e.gif">
+
+- 上記で開いたGameViewの片方のDisplayを`Display 2`へ変更します。
+
+<img width="400" alt="image" src="https://user-images.githubusercontent.com/29646672/185821844-cdcc9687-1a3e-44fe-a46f-1803bbbe9870.gif">
+
 
 ## 計測方法
 
