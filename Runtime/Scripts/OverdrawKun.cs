@@ -1,13 +1,14 @@
 ﻿// (C) UTJ
 using UnityEngine;
 
-namespace Utj.OverdrawKun {
+namespace Utj.OverdrawKun
+{
 
     [ExecuteInEditMode]
     [RequireComponent(typeof(Camera))]
     [DefaultExecutionOrder(100)]
     class OverdrawKun : MonoBehaviour
-    {        
+    {
         public Camera MasterCamera = null;
 
         Camera thisCamera_ = null;
@@ -33,11 +34,14 @@ namespace Utj.OverdrawKun {
 
         [SerializeField] int recordingInterval = 5;
         [SerializeField] int captureFramerate = 30;
+
+        private int captureFramerateBackup;
+
         STATE state = STATE.IDLE;
         public STATE State
         {
             get { return state; }
-        }        
+        }
         int recordNo;
         public int RecordNum
         {
@@ -50,7 +54,7 @@ namespace Utj.OverdrawKun {
 
         void Start()
         {
-            if(MasterCamera == null)
+            if (MasterCamera == null)
             {
                 MasterCamera = Camera.main;
             }
@@ -84,8 +88,9 @@ namespace Utj.OverdrawKun {
             {
                 if (counter <= 0)
                 {
-                    var texture2D = new Texture2D(ThisCamera.pixelWidth,ThisCamera.pixelHeight,TextureFormat.RGB24, false);
-                    if (texture2D != null) {
+                    var texture2D = new Texture2D(ThisCamera.pixelWidth, ThisCamera.pixelHeight, TextureFormat.RGB24, false);
+                    if (texture2D != null)
+                    {
                         texture2D.ReadPixels(ThisCamera.pixelRect, 0, 0);
                         texture2D.Apply();
                         var bytes = texture2D.EncodeToPNG();
@@ -107,7 +112,8 @@ namespace Utj.OverdrawKun {
         {
             if (state == STATE.IDLE)
             {
-                Time.captureFramerate = captureFramerate;                                               
+                captureFramerateBackup = Time.captureFramerate;
+                Time.captureFramerate = captureFramerate;
                 recordNo = 0;
                 counter = 0;
                 var dateTimes = System.DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -116,7 +122,7 @@ namespace Utj.OverdrawKun {
                 {
                     System.IO.Directory.CreateDirectory(fpath);
                 }
-                state = STATE.RECORDING;                
+                state = STATE.RECORDING;
             }
         }
 
@@ -125,8 +131,9 @@ namespace Utj.OverdrawKun {
         {
             if (state == STATE.RECORDING)
             {
+                Time.captureFramerate = captureFramerateBackup;
                 state = STATE.IDLE;
-            }            
+            }
         }
 #endif
     }
